@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  # Your FastAPI app
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017
+      - DATABASE_NAME=myapp
+      - SECRET_KEY=your-secret-key-here
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app                    # hot reload in development
+
+  # MongoDB container
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db       # data persists even if container restarts
+
+volumes:
+  mongo_data:
